@@ -1,0 +1,90 @@
+body {
+    background-color: rgb(7, 7, 7);
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center; /* центрирует по горизонтали */
+  align-items: center;     /* центрирует по вертикали */
+  height: 120px;           /* высота шапки */
+  background: transparent; /* можно поменять цвет, если нужно */
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.header2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 100px;
+  background-color: #f4ffac;
+  border-radius: 60px;
+  font-size: 60px;
+  color: rgb(7, 7, 7);
+  font-family: intro; /* замена, потому что 'mansfield' не стандартный */
+}
+
+.yellow{
+    padding-right: 10%;
+    padding-top: 150px;
+    font-size: 28px;
+    color:#f4ffac
+}
+
+.custom-hr{
+    background-color: #f4ffac;
+    position: absolute;
+    height: 4px;
+    top: 459.5px;
+    width: 100%;
+    z-index: -2;  
+    border: none;
+}
+
+.circle {
+    background: #f4ffac;
+    position: absolute;
+    height: 495px;
+    width: 495px; 
+    left: -82.5px;
+    top: 212px;
+    border-radius: 50%;
+    z-index: -1;   
+}
+
+.icon{
+    position: absolute;
+    height: 412.5px;
+    width: 412.5px;
+    left: -82.5px;
+    top: 212px;
+    transform: translate(calc((495px - 412.5px) / 2), calc((495px - 412.5px) / 2));
+}
+
+.buttons{
+    position:absolute;
+    color:#f4ffac;
+    top: 212px;
+    left: 513.5px;
+    font-size: 20px;
+}
+
+.password, 
+.mail, 
+.username{
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f4ffac;
+  font-size: 22px;       /* 🔹 Увеличиваем размер текста */
+  font-family: intro, sans-serif; /* 🔹 Тот же шрифт, что в заголовке */
+  padding: 8px 12px;     /* 🔹 Немного внутреннего отступа */
+  width: 320px;          /* 🔹 Чтобы поля были шире */
+  margin-bottom: 12px;   /* 🔹 Расстояние между полями */
+  display: block;     
+}

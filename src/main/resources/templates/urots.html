@@ -1,0 +1,39 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- link rel="stylesheet" type="text/css" media="all" 
+          href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" /-->
+    <meta name="author" content="Urzagur">
+    <meta name="deskription" content="Urots are all in this massagner (я не шпрехаю по английский)">
+    <meta name="keywords" content="urots, cringe">
+    <title>Urotes</title>
+
+    <link rel="stylesheet" href="static/main">
+    <link rel="icon" href="images/icon.png">
+  </head>
+
+  <body>
+  
+    <p th:text="${name}">Welcome to our grocery store!</p>
+
+    <header align="center">
+      <div align="center" class="header2"><b>UROTS</b></div>
+    </header>
+    <main>
+      <div>
+        <hr class="custom-hr">
+        <div class="circle"></div>
+        <img src="images/icon.png" class="icon">
+      </div>
+
+      <div class="buttons"><b>
+        <input type="text" placeholder="Місце під ім'я" value="Місце під ім'я" maxlength="20" name="username" id="username" class="username"><br>
+        <input type="text" placeholder="Місце під єлектрону почту" value="Місце під єлектрону почту" maxlength="100" name="Mail" id="mail" class="mail"><br>
+        <input type="text" placeholder="Місце під пароль" value="Місце під пароль" maxlength="50" name="pass" id="pass" class="password">
+      </b></div>
+    </main>
+  </body>
+</html>
