@@ -32,7 +32,7 @@ public class MainControler {
         dune2021.comment = "";
         dune2021.rating = 8;
         dune2021.name = "Dune";
-        dune2021.pictureUrl = "https://picsum.photos/201";
+        dune2021.pictureUrl = "https://picsum.photos/200";
         film_list.add(dune2021);
 
         ModelFilm dune2024 = new ModelFilm();
@@ -40,7 +40,7 @@ public class MainControler {
         dune2024.comment = "";
         dune2024.rating = 8;
         dune2024.name = "Dune 2";
-        dune2024.pictureUrl = "https://picsum.photos/202";
+        dune2024.pictureUrl = "https://picsum.photos/200";
         film_list.add(dune2024);
 
         ModelFilm superMan2025 = new ModelFilm();
@@ -48,7 +48,7 @@ public class MainControler {
         superMan2025.comment = "Superman in other films was better.";
         superMan2025.rating = 7;
         superMan2025.name = "Superman";
-        superMan2025.pictureUrl = "https://picsum.photos/203";
+        superMan2025.pictureUrl = "https://picsum.photos/200";
         film_list.add(superMan2025);
 
         ModelFilm homeAlone1990 = new ModelFilm();
@@ -56,7 +56,7 @@ public class MainControler {
         homeAlone1990.comment = "The GOAT new year movie!";
         homeAlone1990.rating = 8;
         homeAlone1990.name = "Home alone 1";
-        homeAlone1990.pictureUrl = "https://picsum.photos/203";
+        homeAlone1990.pictureUrl = "https://picsum.photos/200";
         film_list.add(homeAlone1990);
 
         ModelFilm homeAlone1992 = new ModelFilm();
@@ -64,7 +64,7 @@ public class MainControler {
         homeAlone1992.comment = "First was better.";
         homeAlone1992.rating = 7;
         homeAlone1992.name = "Home alone 2";
-        homeAlone1992.pictureUrl = "https://picsum.photos/203";
+        homeAlone1992.pictureUrl = "https://picsum.photos/200";
         film_list.add(homeAlone1992);
 
         ModelFilm homeAlone1997 = new ModelFilm();
@@ -72,7 +72,7 @@ public class MainControler {
         homeAlone1997.comment = "It was the worst.";
         homeAlone1997.rating = 5;
         homeAlone1997.name = "Home alone 3";
-        homeAlone1997.pictureUrl = "https://picsum.photos/203";
+        homeAlone1997.pictureUrl = "https://picsum.photos/200";
         film_list.add(homeAlone1997);
 
         ModelFilm homeAlone2012 = new ModelFilm();
