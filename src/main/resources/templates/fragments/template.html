@@ -1,0 +1,13 @@
+<div th:replace="~{fragments/head.html}"></div>
+
+    <body>
+    </body>
+
+    ModelFilm theNorthman2022 = new ModelFilm();
+    theNorthman2022.year = 2022;
+    theNorthman2022.comment = "Fun movie with one poor casting choice.";
+    theNorthman2022.rating = 7;
+    theNorthman2022.name = filmName;
+    theNorthman2022.pictureUrl = "https://picsum.photos/200";
+    model.addAttribute("film", theNorthman2022);
+    return "film";

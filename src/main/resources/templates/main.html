@@ -1,0 +1,21 @@
+<div th:replace="~{fragments/head.html}"></div>
+
+<body>
+  <div class="container-fluid">
+    <div class="row" style="height: 50px;">a</div>
+    <div class="row">
+      <div class="col-3 bg-info">
+        лалалал
+      </div>
+      <div class="col bg-warning">
+        <div class="d-flex flex-wrap justify-content-evenly gap-1">
+          <div th:each="film: ${film_list}">
+            <div th:replace="~{fragments/film_utils.html :: film_card(film=${film})}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -5,20 +5,21 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import models.ModelFilm;
 
-
 @Controller
 @RequestMapping("")
 public class MainControler {
-    @GetMapping("/")
-    public String getMethodName(@RequestParam(required=false) String param, Model model) {
 
-        ArrayList<ModelFilm> film_list = new ArrayList<ModelFilm>(); 
-        
+    @GetMapping("/")
+    public String getMainPage(@RequestParam(required = false) String param, Model model) {
+
+        ArrayList<ModelFilm> film_list = new ArrayList<ModelFilm>();
+
         ModelFilm theNorthman2022 = new ModelFilm();
         theNorthman2022.year = 2022;
         theNorthman2022.comment = "Fun movie with one poor casting choice.";
@@ -123,8 +124,14 @@ public class MainControler {
         heIsWorseThanMe1985.pictureUrl = "https://picsum.photos/203";
         film_list.add(heIsWorseThanMe1985);
 
-
         model.addAttribute("film_list", film_list);
+        return "main";
+    }
+
+    @GetMapping("/film-{filmName}")
+    public String getFilm(@PathVariable String filmName, Model model) {
+        model.addAttribute("name", filmName);
         return "film";
     }
+
 }
