@@ -21,13 +21,13 @@ public class MainRestControler {
     public String getMainPage(@RequestParam(required = false) String param, Model model) {
 
         // model.addAttribute("film_list", null);
-        return "main";
+        return filmRepo.findAll().toString();
     }
 
     @GetMapping("/film-{filmName}")
     public String getFilm(@PathVariable String filmName, Model model) {
-        model.addAttribute("name", filmName);
-        return "film";
+        // model.addAttribute("name", filmName);
+        return filmRepo.findFirstByNameLike(filmName).toString();
     }
 
 }

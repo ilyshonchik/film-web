@@ -5,9 +5,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
-@Table(name = "film_table")
+@Data
+@Table (name = "film_table", schema = "film_database")
 public class Film {
 
     @Id
@@ -22,9 +24,6 @@ public class Film {
 
     @Column(name = "rating")
     private Float rating;
-
-    @Column(length = 500, name = "pictureUrl")
-    private String pictureURL;
 
     @Column(name = "genre")
     private Integer genre;
