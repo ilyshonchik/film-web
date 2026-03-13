@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- ═══════════════════════════════════════
+     catalog.html  —  Film Catalog Page
+     Fragments: fragments/layout.html
+     CSS:       /css/cinevault.css
+                /css/catalog.css
+     ═══════════════════════════════════════ -->
+
+<head th:replace="~{fragments/layout :: head('Film Catalog', 'catalog')}"></head>
+
+<body>
+
+<!-- ── Navbar ── -->
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<!-- ── Hero Strip ── -->
+<div class="hero-strip">
+    <div class="container-fluid">
+        <h1>Discover <em>Cinema</em><br>Worth Watching</h1>
+    </div>
+</div>
+
+<!-- ── Page Body ── -->
+<div class="page-body">
+
+    <!-- Filter Sidebar -->
+    <aside th:replace="~{fragments/layout :: filter-sidebar}"></aside>
+
+    <!-- Catalog Main -->
+    <main class="catalog-main">
+
+        <!-- Toolbar -->
+        <div class="catalog-toolbar">
+            <div class="result-count">
+                Showing <strong th:text="${films.size()}">0</strong>
+            </div>
+            <div class="sort-tabs">
+                <span class="sort-tab active">Grid</span>
+                <span class="sort-tab">List</span>
+            </div>
+        </div>
+
+        <!-- Films Grid -->
+        <div class="films-grid">
+            <th:block th:each="film : ${films}">
+                <a th:replace="~{fragments/layout :: film-card(film=${film})}"></a>
+            </th:block>
+        </div>
+
+        <!-- Pagination -->
+        <!-- <nav th:replace="~{fragments/layout :: pagination}"></nav> -->
+
+    </main>
+</div>
+
+<!-- ── Footer ── -->
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+<!-- Page-specific JS -->
+<script>
+    function toggleStar(el) {
+        document.querySelectorAll('.star-badge').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('minRatingInput').value = el.dataset.val;
+    }
+    document.querySelectorAll('.sort-tab').forEach(tab => {
+        tab.addEventListener('click', function () {
+            document.querySelectorAll('.sort-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+</script>
+
+</body>
+</html>

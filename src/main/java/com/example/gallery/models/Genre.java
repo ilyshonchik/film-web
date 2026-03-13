@@ -9,25 +9,13 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table (name = "film_table", schema = "film_database")
-public class Film {
+@Table (name = "genres", schema = "film_database")
+public class Genre{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 100)
+    @Column(length = 45)
     private String name;
-
-    @Column(name = "release_year")
-    private Short year;
-
-    @Column(name = "rating")
-    private Float rating;
-
-    @Column(name = "genre")
-    private Integer genre;
-
-    @Column(name = "nsfm")
-    private boolean nsfm = false;
 }

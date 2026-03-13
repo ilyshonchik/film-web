@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gallery.repositories.FilmRepository;
 
+
 @RestController
-@RequestMapping("rest")
+@RequestMapping("/rest")
 public class MainRestControler {
     
     @Autowired

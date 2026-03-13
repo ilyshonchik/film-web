@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- ═══════════════════════════════════════
+     film-detail.html  —  Film Detail Page
+     Fragments: fragments/layout.html
+     CSS:       /css/cinevault.css
+                /css/film-detail.css
+     ═══════════════════════════════════════ -->
+
+<head th:replace="~{fragments/layout :: head(${film.title}, 'film-detail')}"></head>
+
+<body>
+
+<!-- ── Navbar ── -->
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<!-- ── Cinematic Backdrop Hero ── -->
+<div th:replace="~{fragments/layout :: film-backdrop(film=${film})}"></div>
+
+<!-- ── Main Content ── -->
+<div class="content-section">
+    <div class="section-grid">
+
+        <!-- Left column -->
+        <div>
+            <!-- Video Player -->
+            <div th:replace="~{fragments/layout :: video-player(film=${film})}"></div>
+
+            <!-- Synopsis / Cast / Reviews Tabs -->
+            <div th:replace="~{fragments/layout :: film-details-tabs(film=${film})}"></div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <aside class="detail-sidebar">
+
+            <!-- Film Info -->
+            <div th:replace="~{fragments/layout :: film-info-card(film=${film})}"></div>
+
+            <!-- Genres -->
+            <div class="info-card">
+                <div class="info-card-title">
+                    <i class="bi bi-tag me-1"></i> Genres
+                </div>
+                <div class="genre-tags">
+                    <span class="genre-tag" th:each="g : ${film.genres}" th:text="${g}">Genre</span>
+                </div>
+            </div>
+
+            <!-- Related Films -->
+            <div th:replace="~{fragments/layout :: related-films(relatedFilms=${relatedFilms})}"></div>
+
+        </aside>
+    </div>
+</div>
+
+<!-- ── Footer ── -->
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+<!-- Page-specific JS -->
+<script>
+    // Swap video thumbnail for YouTube embed on play
+    const wrap  = document.getElementById('videoWrap');
+    const thumb = document.getElementById('videoThumb');
+    const btn   = document.getElementById('playBtn');
+    const frame = document.getElementById('trailerFrame');
+
+    if (btn) {
+        btn.addEventListener('click', () => {
+            if (thumb) thumb.style.display = 'none';
+            btn.style.display = 'none';
+            if (frame) {
+                frame.style.display = 'block';
+                frame.src = frame.src.replace('autoplay=0', 'autoplay=1');
+            }
+        });
+    }
+
+    // Share button
+    document.querySelectorAll('[data-share-url]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            navigator.share
+                ? navigator.share({ url: btn.dataset.shareUrl })
+                : navigator.clipboard.writeText(window.location.href);
+        });
+    });
+</script>
+
+</body>
+</html>

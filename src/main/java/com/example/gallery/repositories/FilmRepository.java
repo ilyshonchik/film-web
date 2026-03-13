@@ -19,4 +19,18 @@ public interface FilmRepository extends JpaRepository<Film, Integer>{
     public Optional<Film> findFirstByNameLike(@Param("name") String name);
 
     public List<Film> findAllByOrderByNameAsc();
+    public List<Film> findAllByOrderByNameDesc();
+    public List<Film> findAllByNsfmTrue();
+    
+    @Query("""
+        SELECT u
+        FROM Film u
+        WHERE (u.nsfm = :nsfm OR u.nsfm = false)
+            AND u.year <= :yearMax AND u.year >= :yearMin
+    """)
+    List<Film> findAllByFilters(
+        @Param("nsfm") Boolean nsfm,
+        @Param("yearMin") int yearMin,
+        @Param("yearMax") int yearMax
+    );
 }

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--
+  ═══════════════════════════════════════════════════════════════
+  CineVault — Thymeleaf Fragments
+  File: templates/fragments/layout.html
+
+  Available fragments:
+    th:replace="~{fragments/layout :: head(title, extraCss)}"
+    th:replace="~{fragments/layout :: navbar}"
+    th:replace="~{fragments/layout :: filter-sidebar}"
+    th:replace="~{fragments/layout :: film-card(film)}"
+    th:replace="~{fragments/layout :: pagination}"
+    th:replace="~{fragments/layout :: film-backdrop(film)}"
+    th:replace="~{fragments/layout :: video-player(film)}"
+    th:replace="~{fragments/layout :: film-details-tabs(film)}"
+    th:replace="~{fragments/layout :: film-info-card(film)}"
+    th:replace="~{fragments/layout :: related-films(relatedFilms)}"
+    th:replace="~{fragments/layout :: footer}"
+  ═══════════════════════════════════════════════════════════════
+-->
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     FRAGMENT: head
+     Usage: <head th:replace="~{fragments/layout :: head('Page Title', 'catalog')}">
+     @param title    — Browser tab title
+     @param pageCss  — Name of page-specific CSS file (without .css)
+                       e.g. 'catalog' → /css/catalog.css
+     ═══════════════════════════════════════════════ -->
+<th:block th:fragment="head(title, pageCss)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title + ' — CineVault'}">CineVault</title>
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+          rel="stylesheet">
+
+    <!-- Shared base styles -->
+    <link rel="stylesheet" th:href="@{/css/cinevault.css}">
+    <!-- Page-specific styles -->
+    <link rel="stylesheet" th:href="@{'/css/' + ${pageCss} + '.css'}" th:if="${pageCss != null}">
+</th:block>
+
+
+<!-- ═══════════════════════════════════════════════
+     FRAGMENT: navbar
+     Usage: <nav th:replace="~{fragments/layout :: navbar}">
+     ═══════════════════════════════════════════════ -->
+<nav class="navbar navbar-expand-lg" th:fragment="navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/catalog}">Cine<span>Vault</span></a>
+
+        <button class="navbar-toggler border-0 text-light" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navMenu"
+                aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-list fs-4"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav me-auto ms-4 gap-1">
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${activePage == 'catalog'} ? 'active'"
+                       th:href="@{/catalog}">Catalog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${activePage == 'new'} ? 'active'"
+                       th:href="@{/new-releases}">New Releases</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${activePage == 'top'} ? 'active'"
+                       th:href="@{/top-rated}">Top Rated</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${activePage == 'collections'} ? 'active'"
+                       th:href="@{/collections}">Collections</a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center gap-3">
+                <form th:action="@{/search}" method="get" class="d-flex">
+                    <input class="nav-search" type="search" name="q"
+                           placeholder="Search films…"
+                           th:value="${param.q}">
+                </form>
+                <a th:href="@{/profile}" class="text-decoration-none"
+                   style="color:var(--text-muted);font-size:1.25rem;">
+                    <i class="bi bi-person-circle"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════
+     FRAGMENT: filter-sidebar
+     Usage: <aside th:replace="~{fragments/layout :: filter-sidebar}">
+     Model attrs: genres, selectedGenres, yearFrom, minRating
+     ═══════════════════════════════════════════════ -->
+<aside class="filter-sidebar" th:fragment="filter-sidebar">
+
+    <div class="filter-title">
+        <i class="bi bi-sliders2"></i> Filters
+    </div>
+
+    <form th:action="@{/catalog}" method="get">
+
+        <!-- Genre -->
+        <div class="filter-section">
+            <div class="filter-section-label">Genre</div>
+            <div th:each="genre : ${genres}">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox"
+                           th:id="'genre-' + ${genre.id}"
+                           th:value="${genre.id}"
+                           name="genres">
+                           <!-- th:checked="${selectedGenres != null and #lists.contains(selectedGenres, genre.id)}" -->
+                            
+                    <label class="form-check-label"
+                           th:for="'genre-' + ${genre.id}"
+                           th:text="${genre.name}">Genre</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Year Range -->
+        <div class="filter-section">
+            <div class="filter-section-label">Release Year</div>
+            <input type="range" class="form-range"
+                   min="1920" max="2024"
+                   th:value="${yearFrom != null ? yearFrom : 1920}"
+                   name="yearFrom" id="yearRange"
+                   oninput="document.getElementById('yearVal').textContent = this.value">
+            <div class="range-labels">
+                <span>1920</span>
+                <span id="yearVal" th:text="${yearFrom != null ? yearFrom : 1920}">1920</span>
+                <span>2024</span>
+            </div>
+        </div>
+
+        <!-- Rating -->
+        <div class="filter-section">
+            <div class="filter-section-label">Minimum Rating</div>
+            <div class="star-filter">
+                <span class="star-badge" th:classappend="${minRating == '9'} ? 'active'"
+                      onclick="toggleStar(this)" data-val="9">9+ ★</span>
+                <span class="star-badge" th:classappend="${minRating == '8' or minRating == null} ? 'active'"
+                      onclick="toggleStar(this)" data-val="8">8+ ★</span>
+                <span class="star-badge" th:classappend="${minRating == '7'} ? 'active'"
+                      onclick="toggleStar(this)" data-val="7">7+ ★</span>
+                <span class="star-badge" th:classappend="${minRating == '6'} ? 'active'"
+                      onclick="toggleStar(this)" data-val="6">6+ ★</span>
+                <span class="star-badge" th:classappend="${minRating == 'any'} ? 'active'"
+                      onclick="toggleStar(this)" data-val="any">Any</span>
+            </div>
+            <input type="hidden" name="minRating" id="minRatingInput" th:value="${minRating}">
+        </div>
+
+        <!-- Language -->
+        <div class="filter-section">
+            <div class="filter-section-label">Language</div>
+            <select class="form-select" name="language">
+                <option value="" th:selected="${param.language == null}">All Languages</option>
+                <option value="en" th:selected="${param.language == 'en'}">English</option>
+                <option value="fr" th:selected="${param.language == 'fr'}">French</option>
+                <option value="de" th:selected="${param.language == 'de'}">German</option>
+                <option value="ja" th:selected="${param.language == 'ja'}">Japanese</option>
+                <option value="es" th:selected="${param.language == 'es'}">Spanish</option>
+                <option value="it" th:selected="${param.language == 'it'}">Italian</option>
+            </select>
+        </div>
+
+        <!-- Sort -->
+        <div class="filter-section">
+            <div class="filter-section-label">Sort By</div>
+            <select class="form-select" name="sort">
+                <option value="popularity" th:selected="${param.sort == 'popularity'}">Popularity</option>
+                <option value="rating"     th:selected="${param.sort == 'rating'}">Rating</option>
+                <option value="year_desc"  th:selected="${param.sort == 'year_desc'}">Newest First</option>
+                <option value="year_asc"   th:selected="${param.sort == 'year_asc'}">Oldest First</option>
+                <option value="title"      th:selected="${param.sort == 'title'}">Title A–Z</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-apply">
+            <i class="bi bi-funnel-fill me-1"></i> Apply Filters
+        </button>
+        <button type="reset" class="btn-reset">Reset All</button>
+    </form>
+</aside>
+
+
+<!-- ═══════════════════════════════════════════════
+     FRAGMENT: film-card
+     Usage: <a th:replace="~{fragments/layout :: film-card(film=${film})}">
+     @param film — FilmSummaryDto { id, title, year, duration, genre,
+                                    rating, posterUrl, badge }
+     ═══════════════════════════════════════════════ -->
+<a class="film-card" th:fragment="film-card(film)"
+   th:href="@{/films/{id}(id=${film.id})}">
+    <div class="film-poster">
+        <img th:src="${film.posterUrl}" th:alt="${film.title}">
+        <div class="film-overlay"></div>
+        <div class="film-play"><i class="bi bi-play-fill"></i></div>
+        <div class="film-badge" th:if="${film.badge}" th:text="${film.badge}">NEW</div>
+        <div class="film-rating">
+            <i class="bi bi-star-fill" style="font-size:.7rem;"></i>
+            <span th:text="${film.rating}">8.0</span>
+        </div>
+    </div>
+    <div class="film-info">
+        <div class="film-title" th:text="${film.title}">Film Title</div>
+        <div class="film-meta">
+            <span th:text="${film.year}">2024</span>
+            <span class="dot"></span>
+            <span th:text="${film.duration}">120 min</span>
+        </div>
+        <span class="film-genre-pill" th:text="${film.genre}">Genre</span>
+    </div>
+</a>
+
+
+<!-- ═══════════════════════════════════════════════
+     FRAGMENT: pagination
+     Usage: <nav th:replace="~{fragments/layout :: pagination}">
+     Model attrs: currentPage, totalPages
+     ═══════════════════════════════════════════════ -->
+<nav class="pagination-wrapper" th:fragment="pagination" aria-label="Film catalog pages">
+    <ul class="pagination">
+        <li class="page-item" th:classappend="${currentPage <= 1} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/catalog(page=${currentPage - 1})}">&#171;</a>
+        </li>
+        <li class="page-item"
+            th:each="p : ${#numbers.sequence(1, totalPages)}"
+            th:classappend="${p == currentPage} ? 'active'">
+            <a class="page-link"
+               th:href="@{/catalog(page=${p})}"
+               th:text="${p}">1</a>
+        </li>
+        <li class="page-item" th:classappend="${currentPage >= totalPages} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/catalog(page=${currentPage + 1})}">&#187;</a>
+        </li>
+    </ul>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════
+     FRAGMENT: film-backdrop
+     Usage: <div th:replace="~{fragments/layout :: film-backdrop(film=${film})}">
+     @param film — FilmDetailDto { title, tagline, year, duration, certification,
+                                   rating, voteCount, genres, posterUrl, backdropUrl }
+     ═══════════════════════════════════════════════ -->
+<div class="film-backdrop" th:fragment="film-backdrop(film)">
+    <img th:src="${film.backdropUrl}" th:alt="${film.title} + ' backdrop'">
+    <div class="film-backdrop-gradient"></div>
+    <div class="film-backdrop-left"></div>
+
+    <div class="film-hero-content">
+        <!-- Poster thumbnail -->
+        <div class="film-hero-poster">
+            <img th:src="${film.posterUrl}" th:alt="${film.title}">
+        </div>
+
+        <!-- Info -->
+        <div class="film-hero-info">
+            <div class="film-breadcrumb">
+                <a th:href="@{/catalog}">← Catalog</a>
+                &nbsp;/&nbsp;
+                <span th:text="${film.primaryGenre}">Genre</span>
+            </div>
+
+            <h1 class="film-hero-title" th:text="${film.title}">Film Title</h1>
+            <p class="film-hero-tagline" th:text="${film.tagline}">Tagline</p>
+
+            <div class="film-meta-chips">
+                <span class="chip">
+                    <i class="bi bi-calendar3"></i>
+                    <span th:text="${film.year}">2024</span>
+                </span>
+                <span class="chip">
+                    <i class="bi bi-clock"></i>
+                    <span th:text="${film.duration}">120 min</span>
+                </span>
+                <span class="chip accent-chip" th:text="${film.certification}">PG-13</span>
+                <span class="chip" th:each="genre : ${film.genres}" th:text="${genre}">Genre</span>
+            </div>
+
+            <div class="film-rating-big">
+                <span class="score" th:text="${film.rating}">8.0</span>
+                <span class="out-of">/ 10</span>
+                <div class="ms-2">
+                    <div class="stars-row">
+                        <!-- Stars rendered server-side or via JS -->
+                        <i class="bi bi-star-fill"  th:each="s : ${#numbers.sequence(1, film.fullStars)}"></i>
+                        <i class="bi bi-star-half"  th:if="${film.halfStar}"></i>
+                        <i class="bi bi-star"       th:each="s : ${#numbers.sequence(1, film.emptyStars)}"></i>
+                    </div>
+                    <div style="font-size:.75rem;color:var(--text-muted);margin-top:.2rem;">
+                        <span th:text="${#numbers.formatInteger(film.voteCount, 1, 'COMMA')}">0</span> votes
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-actions">
+                <a href="#player" class="btn-watch">
+                    <i class="bi bi-play-circle-fill fs-5"></i> Watch Now
+                </a>
+                <form th:action="@{/watchlist/add}" method="post" style="display:inline">
+                    <input type="hidden" name="filmId" th:value="${film.id}">
+                    <button type="submit" class="btn-outline-film">
+                        <i class="bi bi-bookmark-plus"></i> Watchlist
+                    </button>
+                </form>
+                <button class="btn-outline-film"
+                        th:data-share-url="@{/films/{id}(id=${film.id})}">
+                    <i class="bi bi-share"></i> Share
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     FRAGMENT: video-player
+     Usage: <div th:replace="~{fragments/layout :: video-player(film=${film})}">
+     @param film — FilmDetailDto { title, trailerId, backdropUrl, clips[] }
+     ═══════════════════════════════════════════════ -->
+<div class="video-block" id="player" th:fragment="video-player(film)">
+    <div class="section-label">
+        <i class="bi bi-camera-reels me-1"></i> Official Trailer
+    </div>
+
+    <div class="video-player-wrap" id="videoWrap"
+         th:data-video-id="${film.trailerId}">
+
+        <!-- Thumbnail (hidden once play is pressed) -->
+        <div class="video-thumbnail" id="videoThumb">
+            <img th:src="${film.backdropUrl}" th:alt="${film.title} + ' preview'">
+            <div class="film-backdrop-gradient"></div>
+        </div>
+
+        <!-- Play button overlay -->
+        <div class="video-play-btn" id="playBtn">
+            <i class="bi bi-play-fill" style="margin-left:4px;"></i>
+        </div>
+
+        <div class="video-label">
+            <i class="bi bi-badge-hd"></i>
+            <span th:text="${film.trailerDuration}">2:22</span>
+        </div>
+
+        <!-- YouTube embed (injected on play) -->
+        <iframe th:if="${film.trailerId != null}"
+                th:src="'https://www.youtube.com/embed/' + ${film.trailerId} + '?autoplay=0&rel=0'"
+                th:title="${film.title} + ' Trailer'"
+                style="display:none;"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                id="trailerFrame"></iframe>
+    </div>
+
+    <!-- Additional clips -->
+    <div class="d-flex gap-2 mt-2" th:if="${film.clips != null and not #lists.isEmpty(film.clips)}">
+        <div class="clip-thumb" th:each="clip : ${film.clips}"
+             th:data-video-id="${clip.videoId}">
+            <div class="clip-thumb-poster">
+                <img th:src="${clip.thumbnailUrl}" th:alt="${clip.label}">
+                <div class="clip-thumb-icon"><i class="bi bi-play-circle-fill"></i></div>
+            </div>
+            <div class="clip-thumb-label" th:text="${clip.label}">Clip</div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     FRAGMENT: film-details-tabs
+     Usage: <div th:replace="~{fragments/layout :: film-details-tabs(film=${film})}">
+     @param film — FilmDetailDto { synopsis, cast[], reviews[] }
+     ═══════════════════════════════════════════════ -->
+<div class="detail-tabs" th:fragment="film-details-tabs(film)">
+    <ul class="nav nav-tabs" id="filmTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="synopsis-tab"
+                    data-bs-toggle="tab" data-bs-target="#synopsis"
+                    type="button" role="tab">Synopsis</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="cast-tab"
+                    data-bs-toggle="tab" data-bs-target="#cast"
+                    type="button" role="tab">Cast &amp; Crew</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="reviews-tab"
+                    data-bs-toggle="tab" data-bs-target="#reviews"
+                    type="button" role="tab">Reviews</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="filmTabsContent">
+
+        <!-- Synopsis -->
+        <div class="tab-pane fade show active" id="synopsis" role="tabpanel">
+            <div class="synopsis">
+                <p th:utext="${film.synopsis}">Synopsis text here.</p>
+            </div>
+        </div>
+
+        <!-- Cast & Crew -->
+        <div class="tab-pane fade" id="cast" role="tabpanel">
+            <div class="cast-grid">
+                <div class="cast-card" th:each="member : ${film.cast}">
+                    <div class="cast-avatar">
+                        <img th:src="${member.photoUrl}" th:alt="${member.name}">
+                    </div>
+                    <div class="cast-name"  th:text="${member.name}">Name</div>
+                    <div class="cast-role"  th:text="${member.character}">Character</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews -->
+        <div class="tab-pane fade" id="reviews" role="tabpanel">
+            <div class="review-card" th:each="review : ${film.reviews}">
+                <div class="review-header">
+                    <div class="review-avatar">
+                        <img th:src="${review.authorAvatarUrl}" th:alt="${review.author}">
+                    </div>
+                    <div>
+                        <div class="review-name"  th:text="${review.author}">Author</div>
+                        <div class="review-score">
+                            <i class="bi bi-star-fill"></i>
+                            <span th:text="${review.score + ' / 10'}">0 / 10</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-text" th:text="${review.body}">Review text.</div>
+                <div class="review-date"
+                     th:text="${#temporals.format(review.createdAt, 'MMMM d, yyyy')}">Date</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     FRAGMENT: film-info-card
+     Usage: <div th:replace="~{fragments/layout :: film-info-card(film=${film})}">
+     @param film — FilmDetailDto { director, writer, studio, country, language,
+                                   releaseDate, budget, boxOffice }
+     ═══════════════════════════════════════════════ -->
+<div class="info-card" th:fragment="film-info-card(film)">
+    <div class="info-card-title">
+        <i class="bi bi-info-circle me-1"></i> Film Details
+    </div>
+    <div class="info-row">
+        <span class="key">Director</span>
+        <span class="val" th:text="${film.director}">—</span>
+    </div>
+    <div class="info-row">
+        <span class="key">Writer</span>
+        <span class="val" th:text="${film.writer}">—</span>
+    </div>
+    <div class="info-row">
+        <span class="key">Studio</span>
+        <span class="val" th:text="${film.studio}">—</span>
+    </div>
+    <div class="info-row">
+        <span class="key">Country</span>
+        <span class="val" th:text="${film.country}">—</span>
+    </div>
+    <div class="info-row">
+        <span class="key">Language</span>
+        <span class="val" th:text="${film.language}">—</span>
+    </div>
+    <div class="info-row">
+        <span class="key">Release Date</span>
+        <span class="val"
+              th:text="${#temporals.format(film.releaseDate, 'MMM d, yyyy')}">—</span>
+    </div>
+    <div class="info-row">
+        <span class="key">Budget</span>
+        <span class="val" th:text="${film.budget}">—</span>
+    </div>
+    <div class="info-row">
+        <span class="key">Box Office</span>
+        <span class="val" th:text="${film.boxOffice}">—</span>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     FRAGMENT: related-films
+     Usage: <div th:replace="~{fragments/layout :: related-films(relatedFilms=${relatedFilms})}">
+     @param relatedFilms — List<FilmSummaryDto>
+     ═══════════════════════════════════════════════ -->
+<div class="info-card" th:fragment="related-films(relatedFilms)">
+    <div class="info-card-title">
+        <i class="bi bi-collection-play me-1"></i> You May Also Like
+    </div>
+
+    <a class="related-film"
+       th:each="related : ${relatedFilms}"
+       th:href="@{/films/{id}(id=${related.id})}">
+        <div class="related-film-thumb">
+            <img th:src="${related.posterUrl}" th:alt="${related.title}">
+        </div>
+        <div>
+            <div class="related-film-title" th:text="${related.title}">Film Title</div>
+            <div class="related-film-meta"
+                 th:text="${related.year + ' · ' + related.rating + '★'}">Year · Rating</div>
+        </div>
+    </a>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     FRAGMENT: footer
+     Usage: <footer th:replace="~{fragments/layout :: footer}">
+     ═══════════════════════════════════════════════ -->
+<footer th:fragment="footer">
+    &copy; 2024 <span>CineVault</span> — All rights reserved.
+    &nbsp;&middot;&nbsp; Built with Bootstrap 5 &amp; Thymeleaf
+
+    <!-- Bootstrap 5 JS (placed here so it loads last on every page) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</footer>
+
+</body>
+</html>
