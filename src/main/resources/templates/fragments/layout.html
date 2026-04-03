@@ -113,8 +113,8 @@
     <form th:action="@{/catalog}" method="get">
 
         <!-- Genre -->
-        <div class="filter-section">
-            <div class="filter-section-label">Genre</div>
+        <div id="genres_list" class="filter-section">
+            <div  class="filter-section-label">Genre</div>
             <div th:each="genre : ${genres}">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox"
@@ -189,7 +189,7 @@
             </select>
         </div>
 
-        <button class="btn-apply" onclick="findByFilters()">
+        <button type="button" class="btn-apply" onclick="findByFilters()">
             <i class="bi bi-funnel-fill me-1"></i> Apply Filters
         </button>
         <button type="reset" class="btn-reset">Reset All</button>
