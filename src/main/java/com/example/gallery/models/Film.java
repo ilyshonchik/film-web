@@ -14,20 +14,20 @@ public class Film {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    public Integer id;
 
     @Column(length = 100)
-    private String name;
+    public String name;
 
     @Column(name = "release_year")
-    private Short year;
+    public Short year;
 
     @Column(name = "rating")
-    private Float rating;
+    public Float rating;
 
     @Column(name = "genre")
-    private Integer genre;
+    public Integer genre;
 
     @Column(name = "nsfm")
-    private boolean nsfm = false;
+    public boolean nsfm = false;
 }

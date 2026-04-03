@@ -1,6 +1,5 @@
 package com.example.gallery.controlers;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +32,11 @@ public class MainControler {
     public String getMainPage(Model model) {
         FiltersSettingsDTO filters = (FiltersSettingsDTO)model.getAttribute("filters");
         List<Film> films = filmRepo.findAll();  
-        // Частичная конвертация списка фильмов в  список ДТО 
-
+        List<FilmSummaryDTO> filmSummaryDTOs = FilmSummaryDTO.fromFilms(films);
         System.out.println(filters);
-        List<FilmSummaryDTO> filmsDTO = new LinkedList<FilmSummaryDTO>();
-        filmsDTO.add(new FilmSummaryDTO());
-        model.addAttribute("films", filmsDTO);
+        model.addAttribute("films", filmSummaryDTOs);
   
-        List<Genre> genres = genreRepo.findAll();
+        List<Genre> genres = genreRepo.findAllOrderByName();
         model.addAttribute("genres", genres);
         return "catalog";
     }
@@ -58,6 +54,7 @@ public class MainControler {
         //TODO: process POST request
         redirectAttributes.addFlashAttribute("filters", entity);
         return "redirect:/";
-        
     }
+
+
 }
