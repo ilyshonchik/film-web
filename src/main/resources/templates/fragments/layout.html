@@ -43,6 +43,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap"
           rel="stylesheet">
 
+    <!-- noUiSlider -->
+    <link href="/css/nouislider.css" rel="stylesheet">
+
     <!-- Shared base styles -->
     <link rel="stylesheet" th:href="@{/css/cinevault.css}">
     <!-- Page-specific styles -->
@@ -133,16 +136,11 @@
         <!-- Year Range -->
         <div class="filter-section">
             <div class="filter-section-label">Release Year</div>
-            <input type="range" class="form-range"
-                   min="1920" max="2024"
-                   th:value="${yearFrom != null ? yearFrom : 1920}"
-                   name="yearFrom" id="yearRange"
-                   oninput="document.getElementById('yearVal').textContent = this.value">
             <div class="range-labels">
-                <span>1920</span>
-                <span id="yearVal" th:text="${yearFrom != null ? yearFrom : 1920}">1920</span>
-                <span>2024</span>
+                <span id = "yearMinLabel">1920</span>
+                <span id = "yearMaxLabel">2024</span>
             </div>
+            <div id="yearSlider"></div>
         </div>
 
         <!-- Rating -->
@@ -158,23 +156,9 @@
                 <span class="star-badge" th:classappend="${minRating == '6'} ? 'active'"
                       onclick="toggleStar(this)" data-val="6">6+ ★</span>
                 <span class="star-badge" th:classappend="${minRating == 'any'} ? 'active'"
-                      onclick="toggleStar(this)" data-val="any">Any</span>
+                      onclick="toggleStar(this)" data-val="0"> Any </span>
             </div>
             <input type="hidden" name="minRating" id="minRatingInput" th:value="${minRating}">
-        </div>
-
-        <!-- Language -->
-        <div class="filter-section">
-            <div class="filter-section-label">Language</div>
-            <select class="form-select" name="language">
-                <option value="" th:selected="${param.language == null}">All Languages</option>
-                <option value="en" th:selected="${param.language == 'en'}">English</option>
-                <option value="fr" th:selected="${param.language == 'fr'}">French</option>
-                <option value="de" th:selected="${param.language == 'de'}">German</option>
-                <option value="ja" th:selected="${param.language == 'ja'}">Japanese</option>
-                <option value="es" th:selected="${param.language == 'es'}">Spanish</option>
-                <option value="it" th:selected="${param.language == 'it'}">Italian</option>
-            </select>
         </div>
 
         <!-- Sort -->
@@ -535,6 +519,7 @@
 
     <!-- Bootstrap 5 JS (placed here so it loads last on every page) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.js"></script>
 </footer>
 
 </body>

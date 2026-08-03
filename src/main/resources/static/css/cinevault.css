@@ -12,6 +12,7 @@
     --accent:      #c9923a;
     --accent-glow: rgba(201,146,58,.35);
     --accent-dim:  #8a6028;
+    --transparent-white: rgba(255,255,255,.02);
     --text-primary:#e8e4da;
     --text-muted:  #7a8499;
     --border:      rgba(201,146,58,.18);

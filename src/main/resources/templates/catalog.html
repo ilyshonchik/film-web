@@ -43,7 +43,7 @@
         </div>
 
         <!-- Films Grid -->
-        <div class="films-grid">
+        <div class="films-grid" id = "films-grid">
             <th:block th:each="film : ${films}">
                 <a th:replace="~{fragments/layout :: film-card(film=${film})}"></a>
             </th:block>

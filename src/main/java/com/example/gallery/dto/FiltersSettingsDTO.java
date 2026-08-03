@@ -3,8 +3,8 @@ import lombok.Data;
 
 @Data
 public class FiltersSettingsDTO {
-    public String genre; 
-    public int yearMin;
-    public int yearMax;
-    public boolean nsfw;
+    public String[] genres; 
+    public int yearfrom;
+    public int yearmax;
+    public int minRating;
 }
