@@ -24,7 +24,26 @@ noUiSlider.create(yearSlider, {
     connect: true
 });
 
+function firstEnter() {
+    let filters = document.getElementById("genres_list")
+    let genres_checkbox = filters.getElementsByClassName("form-check-input")
+    if (localStorage.getItem("firstEnter") == null) {
+        //}
+        //else {
+        genres_data = localStorage.getItem("Genres").split(",")
+        console.log(genres_data)
+
+        for (let i = 0; i < genres_checkbox.length; i++) {
+            if (genres_data.includes(genres_checkbox[i].value)) {
+                genres_checkbox[i].checked = true
+            }
+        }
+    }
+    findByFilters()
+}
+
 function findByFilters() {
+
     let filters = document.getElementById("genres_list")
 
     let genres_checkbox = filters.getElementsByClassName("form-check-input")
@@ -35,10 +54,13 @@ function findByFilters() {
             genres_data.push(genres_checkbox[i].value)
         }
     }
-
+    localStorage.setItem("Genres", genres_data)
+    localStorage.setItem("Yearmin", parseInt(yearMinLabel.innerHTML))
+    localStorage.setItem("Yearmax", parseInt(yearMaxLabel.innerHTML))
+    localStorage.setItem("Minrating", parseInt(minRating.value))
     var data = {
         genres: genres_data,
-        //minimumRating: 2,
+        //minimumRating: 2, 
         //sort_by: ""
         yearfrom: parseInt(yearMinLabel.innerHTML),
         yearmax: parseInt(yearMaxLabel.innerHTML),
@@ -91,3 +113,4 @@ function changeYearLabel(values, handle, unencoded, tap, positions, noUiSlider) 
 }
 // Binding signature
 yearSlider.noUiSlider.on("update", changeYearLabel);
+firstEnter()
