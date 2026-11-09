@@ -16,11 +16,11 @@ public class Film {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
-    @Column(length = 100)
+    @Column(length = 200)
     public String name;
 
-    @Column(name = "release_year")
-    public Short year;
+    @Column(name = "release_year", length = 100)
+    public String year;
 
     @Column(name = "rating")
     public Float rating;
@@ -28,6 +28,9 @@ public class Film {
     @Column(name = "genre")
     public Integer genre;
 
-    @Column(name = "nsfm")
+    @Column(name = "nsfm", columnDefinition = "false")
     public boolean nsfm = false;
+
+    @Column(name = "linkToPoster", nullable = true)
+    public String linkToPoster;
 }

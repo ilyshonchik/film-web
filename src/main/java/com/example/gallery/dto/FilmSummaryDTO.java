@@ -8,7 +8,7 @@ public class FilmSummaryDTO {
 
     public int id; 
     public String title = "";
-    public int year = 0;
+    public String year = "";
     public String duration = "";
     public Integer genre = 0;
     public float rating = 0.0f;
@@ -30,6 +30,7 @@ public class FilmSummaryDTO {
         dto.year = film.year;
         dto.genre = film.genre;
         dto.rating = film.rating;
+        dto.posterUrl = film.linkToPoster;
         return dto;
     }
 }
